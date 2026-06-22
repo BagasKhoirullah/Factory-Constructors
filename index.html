@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OOP Dart - Factory Constructors</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        #progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: #38bdf8;
+            width: 0%;
+            z-index: 5000;
+        }
+
+        .menu-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            font-size: 22px;
+            background: #38bdf8;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            z-index: 4000;
+            display: none;
+        }
+
+        .sidebar {
+            width: 280px;
+            height: 100%;
+            background: #020617;
+            padding: 25px 20px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow: auto;
+            border-right: 1px solid #1e293b;
+            transition: 0.3s;
+            z-index: 3000;
+        }
+
+        .sidebar h2 {
+            color: #38bdf8;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .sidebar input {
+            width: 100%;
+            padding: 8px 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: none;
+            background: #0f172a;
+            color: white;
+            font-size: 14px;
+        }
+        .sidebar input::placeholder {
+            color: #64748b;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px 12px;
+            margin-bottom: 4px;
+            text-decoration: none;
+            color: #cbd5f5;
+            border-radius: 6px;
+            transition: 0.2s;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar a:hover {
+            background: #1e293b;
+            border-left-color: #38bdf8;
+        }
+
+        .content {
+            max-width: 960px;
+            margin-left: 280px;
+            padding: 40px 50px;
+        }
+
+        header {
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 34px;
+            color: #38bdf8;
+        }
+
+        .identity {
+            margin-top: 6px;
+            opacity: 0.8;
+            font-size: 15px;
+        }
+
+        .card {
+            background: #020617;
+            border: 1px solid #1e293b;
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin-top: 15px;
+            transition: 0.25s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .card h3 {
+            color: #38bdf8;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .card ul {
+            padding-left: 22px;
+            margin: 8px 0 10px 0;
+        }
+        .card ul li {
+            margin-bottom: 4px;
+            line-height: 1.6;
+        }
+
+        .card p {
+            margin: 6px 0;
+            line-height: 1.6;
+        }
+
+        .card hr {
+            border: none;
+            border-top: 1px solid #1e293b;
+            margin: 18px 0;
+        }
+
+        .card .jawaban {
+            background: #0f172a;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-top: 12px;
+            border-left: 4px solid #fbbf24;
+        }
+        .card .jawaban strong {
+            color: #fbbf24;
+        }
+
+        pre {
+            background: #0f172a;
+            padding: 16px 18px;
+            border-radius: 8px;
+            overflow: auto;
+            margin-top: 10px;
+            font-size: 14px;
+            line-height: 1.7;
+            border: 1px solid #1e293b;
+            color: #e2e8f0;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        .btn {
+            margin-top: 10px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #38bdf8;
+            color: #0f172a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn:hover {
+            background: #7dd3fc;
+        }
+
+        .dartpad-btn {
+            margin-top: 12px;
+            padding: 6px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #0f172a;
+            color: #38bdf8;
+            border: 1px solid #38bdf8;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 14px;
+            display: inline-block;
+        }
+        .dartpad-btn:hover {
+            background: #38bdf8;
+            color: #0f172a;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 6000;
+        }
+
+        .modal-content {
+            width: 92%;
+            height: 90%;
+            background: #020617;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .modal-header span {
+            font-size: 24px;
+            cursor: pointer;
+            color: #94a3b8;
+        }
+        .modal-header span:hover {
+            color: #fff;
+        }
+
+        #dartpadFrame {
+            flex: 1;
+            border: none;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 900px) {
+            .menu-btn {
+                display: block;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .content {
+                margin-left: 0;
+                padding: 70px 20px 40px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .content {
+                padding: 60px 12px 30px;
+            }
+            .card {
+                padding: 16px;
+            }
+            pre {
+                font-size: 12px;
+                padding: 12px;
+            }
+            header h1 {
+                font-size: 26px;
+            }
+        }
+
+        .badge {
+            display: inline-block;
+            background: #38bdf8;
+            color: #0f172a;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 12px;
+            margin-right: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 14px;
+        }
+        th,
+        td {
+            border: 1px solid #1e293b;
+            padding: 10px 12px;
+            text-align: left;
+        }
+        th {
+            background: #0f172a;
+            color: #38bdf8;
+        }
+        td.good {
+            color: #4ade80;
+        }
+        td.bad {
+            color: #f87171;
+        }
+        td.warn {
+            color: #fbbf24;
+        }
+        .code-inline {
+            background: #0f172a;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+            color: #38bdf8;
+        }
+        .soal-tag {
+            display: inline-block;
+            background: #f87171;
+            color: #0f172a;
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+        .challenge-tag {
+            display: inline-block;
+            background: #fbbf24;
+            color: #0f172a;
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+        .note {
+            background: #0f172a;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 4px solid #38bdf8;
+            margin-top: 10px;
+        }
+        .note strong {
+            color: #38bdf8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PROGRESS BAR -->
+    <div id="progress"></div>
+
+    <!-- MENU TOGGLE (mobile) -->
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2>📘 Daftar Isi</h2>
+        <input type="text" placeholder="Cari materi..." onkeyup="searchMenu(this)" />
+        <a href="#review">Review Sesi 9 – Extension Methods</a>
+        <a href="#pengantar">Pengantar Factory Constructors</a>
+        <a href="#sintaks">Sintaks Factory Constructor</a>
+        <a href="#singleton">Kasus 1 – Singleton Pattern</a>
+        <a href="#caching">Kasus 2 – Factory dengan Caching</a>
+        <a href="#subclass">Kasus 3 – Mengembalikan Subclass</a>
+        <a href="#praktik1">Praktik 1 – Factory untuk Configuration</a>
+        <a href="#response">Response Class (Success/Error)</a>
+        <a href="#vsstatic">Factory vs Static Method</a>
+        <a href="#color">Color Class dengan Cache</a>
+        <a href="#ringkasan">Ringkasan &amp; Best Practices</a>
+        <a href="#latihan">Latihan &amp; Challenge</a>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <header>
+            <h1>🏭 Factory Constructors</h1>
+            <p>Materi OOP Dart – Sesi 10</p>
+            <div class="identity">
+                Nama: <b>M. Bagas Khoirullah</b> &nbsp;|&nbsp; NIM: <b>251410016</b>
+            </div>
+        </header>
+
+        <!-- ===== SLIDE 1: REVIEW ===== -->
+        <section id="review">
+            <h2>📌 Review Sesi 9 – Extension Methods</h2>
+            <div class="card">
+                <ul>
+                    <li><strong>Extension methods:</strong> menambahkan fungsi ke tipe yang sudah ada tanpa mengubah kode asli.</li>
+                    <li>Sintaks: <span class="code-inline">extension Nama on Type { ... }</span></li>
+                    <li>Contoh: <span class="code-inline">'hello'.capitalize()</span></li>
+                </ul>
+                <p><strong>Contoh cepat:</strong></p>
+                <pre>extension IntExt on int {
+    bool get isEven => this % 2 == 0;
+}
+
+void main() {
+    print(4.isEven); // true
+    print(5.isEven); // false
+}</pre>
+                <button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/57d3b8a1f3d3f3b8a1f3d3f3b8a1f3d3')">▶ Buka di DartPad</button>
+            </div>
+        </section>
+
+        <!-- ===== SLIDE 2: PENGANTAR ===== -->
+        <section id="pengantar">
+            <h2>🧠 Pengantar Factory Constructors</h2>
+            <div class="card">
+                <ul>
+                    <li><strong>Apa itu?</strong> Constructor khusus yang <em>tidak selalu</em> membuat instance baru.</li>
+                    <li>Keyword: <span class="code-inline">factory</span></li>
+                    <li><strong>Beda dengan generative constructor:</strong>
+                        <ul>
+                            <li><span class="code-inline">Generative</span>: Selalu membuat instance baru.</li>
+                            <li><span class="code-inline">Factory</span>: Bisa mengembalikan instance yang sudah ada, atau instance dari subclass.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="note">
+                    💡 <strong>Inti:</strong> Factory constructor memberi fleksibilitas dalam pembuatan objek — tidak terikat pada pembuatan instance baru setiap kali dipanggil.
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SLIDE 3: SINTAKS ===== -->
+        <section id="sintaks">
+            <h2>📐 Sintaks Factory Constructor</h2>
+            <div class="card">
+                <pre>class MyClass {
+    // Generative constructor (biasa)
+    MyClass();
+
+    // Factory constructor
+    factory MyClass.create() {
+        // Bisa return instance yang sudah ada
+        // Atau instance dari subclass
+        // Atau instance baru
+        return MyClass();
+    }
+}
+
+void main() {
+    // Perbedaan penggunaan
+    var obj1 = MyClass();      // Generative
+    var obj2 = MyClass.create(); // Factory
+}</pre>
+                <button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/57d3b8a1f3d3f3b8a1f3d3f3b8a1f3d4')">▶ Buka di DartPad</button>
+                <p style="margin-top:8px; color:#94a3b8;">📌 Factory constructor <strong>harus</strong> mengembalikan instance dari tipe yang sama atau subclass-nya.</p>
+            </div>
+        </section>
+
+        <!-- ===== SLIDE 4: SINGLETON ===== -->
+        <section id="singleton">
+            <h2>🔒 Kasus 1 – Singleton Pattern</h2>
+            <div class="card">
+                <p><strong>Singleton:</strong> Hanya satu instance sepanjang aplikasi.</p>
+                <pre>class DatabaseConnection {
+    // Private constructor
+    DatabaseConnection._internal() {
+        print('Creating database connection...');
+    }
+
+    // Static instance
+    static final DatabaseConnection _instance = DatabaseConnection._internal();
+
+    // Factory constructor
+    factory DatabaseConnection() {
+        return _instance;
+    }
+
+    void connect() {
+        print('Connected to database');
+    }
+}
+
+void main() {
+    // Penggunaan
+    var db1 = DatabaseConnection();
+    var db2 = DatabaseConnection();
+    print(identical(db1, db2)); // true - instance yang sama
+    db1.connect();
+    db2.connect();
+}</pre>
+                <button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/57d3b8a1f3d3f3b8a1f3d3f3b8a1f3d5')">▶ Buka di DartPad</button>
+                <div class="note">
+                    ✅ Dengan factory constructor, kita memastikan hanya <strong>satu instance</strong> yang dibuat dan digunakan di seluruh aplikasi.
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SLIDE 5: CACHING ===== -->
+        <section id="caching">
+            <h2>🗄️ Kasus 2 – Factory dengan Caching (ConnectionPool)</h2>
+            <div class="card">
+                <p>Cache koneksi berdasarkan parameter <span class="code-inline">host</span> dan <span class="code-inline">port</span>.</p>
+                <pre>class ConnectionPool {
+    final String host;
+    final int port;
+
+    // Cache berdasarkan parameter
+    static final Map&lt;String, ConnectionPool&gt; _cache = {};
+
+    // Private constructor
+    ConnectionPool._(this.host, this.port);
+
+    // Factory dengan caching
+    factory ConnectionPool(String host, int port) {
+        var key = '$host:$port';
+        // Return dari cache jika ada
+        if (_cache.containsKey(key)) {
+            print('Returning cached connection for $key');
+            return _cache[key]!;
+        }
+        // Buat baru dan cache
+        print('Creating new connection for $key');
+        var connection = ConnectionPool._(host, port);
+        _cache[key] = connection;
+        return connection;
+    }
+
+    void query(String sql) {
+        print('Executing: "$sql" on $host:$port');
+    }
+}
+
+void main() {
+    print('-- Creating conn1 (localhost:5432) --');
+    var conn1 = ConnectionPool('localhost', 5432);
+    conn1.query('SELECT * FROM users;');
+
+    print('\n-- Creating conn2 (localhost:5432 - should be cached) --');
+    var conn2 = ConnectionPool('localhost', 5432);
+    conn2.query('INSERT INTO products (name) VALUES (\'Laptop\');');
+
+    print('\n-- Creating conn3 (db.example.com:3306 - new connection) --');
+    var conn3 = ConnectionPool('db.example.com', 3306);
+    conn3.query('UPDATE orders SET status=\'shipped\' WHERE id=101');
+
+    print('\n-- Are conn1 and conn2 the same instance? ${identical(conn1, conn2)}');
+    print('-- Are conn1 and conn3 the same instance? ${identical(conn1, conn3)}');
+}</pre>
+                <button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/57d3b8a1f3d3f3b8a1f3d3f3b8a1f3d6')">▶ Buka di DartPad</button>
+                <div class="note">
+                    🗂️ Factory constructor memeriksa cache terlebih dahulu. Jika sudah ada, kembalikan instance yang sama — <strong>efisien</strong> untuk resource-heavy objects.
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SLIDE 6: SUBCLASS ===== -->
+        <section id="subclass">
+            <h2>🔀 Kasus 3 – Mengembalikan Subclass (Shape)</h2>
+            <div class="card">
+                <p>Factory constructor bisa mengembalikan <strong>subclass</strong> berdasarkan parameter input.</p>
+                <pre>abstract class Shape {
+    void draw();
+
+    // Factory constructor
+    factory Shape(String type) {
+        switch (type) {
+            case 'circle':
+                return Circle();
+            case 'square':
+                return Square();
+            case 'triangle':
+                return Triangle();
+            case 'rectangle':
+                return Rectangle();
+            default:
+                throw ArgumentError('Unknown shape: $type');
+        }
+    }
+}
+
+class Circle implements Shape {
+    @override
+    void draw() => print('Drawing Circle');
+}
+
+class Square implements Shape {
+    @override
+    void draw() => print('Drawing Square');
+}
+
+class Triangle implements Shape {
+    @override
+    void draw() => print('Drawing Triangle');
+}
+
+class Rectangle implements Shape {
+    @override
+    void draw() => print('Drawing Rectangle');
+}
+
+void main() {
+    var circle = Shape('circle');
+    var square = Shape('square');
+    var triangle = Shape('triangle');
+    var rectangle = Shape('rectangle');
+
+    circle.draw();   // Drawing Circle
+    square.draw();   // Drawing Square
+    triangle.draw(); // Drawing Triangle
+    rectangle.draw(); // Drawing Rectangle
+
+    // var unknown = Shape('pentagon'); // throws ArgumentError
+}</pre>
+                <button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/57d3b8a1f3d3f3b8a1f3d3f3b8a1f3d7')">▶ Buka di DartPad</button>
+                <div class="note">
+                    🔀 Factory constructor bertindak sebagai <strong>factory method</strong> yang memilih subclass yang tepat berdasarkan input, menjaga kode klien tetap sederhana.
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SLIDE 7: PRAKTIK 1 ===== -->
+        <section id="praktik1">
+            <h2>⚙️ Praktik 1 – Factory untuk Configuration</h2>
+            <div class="card">
+                <p>Membuat factory untuk objek <span class="code-inline">Config</span> dengan berbagai source (file, environment, default).</p>
+                <pre>class Config {
+    final String apiUrl;
+    final int timeout;
+    final bool debug;
+
+    // Private constructor
+    Config._({required this.apiUrl, required this.timeout, required this.debug});
+
+    // Factory dari file JSON (simulasi)
+    factory Config.fromJson(Map&lt;String, dynamic&gt; json) {
+        return Config._(
+            apiUrl: json['apiUrl'] ?? 'https://default.api',
+            timeout: json['timeout'] ?? 30,
+            debug: json['debug'] ?? false,
+        );
+    }
+
+    // Factory dari environment (simulasi)
+    factory Config.fromEnv() {
+        // Dalam realita, membaca dari Platform.environment
+        return Config._(
+            apiUrl: 'https://env.api',
+            timeout: 60,
+            debug: true,
+        );
+    }
+
+    // Factory default
+    factory Config.defaultConfig() {
+        return Config._(
+            apiUrl: 'https://default.api',
+            timeout: 30,
+            debug: false,
+        );
+    }
+
+    @override
+    String toString() => 'Config(apiUrl: $apiUrl, timeout: $timeout, debug: $debug)';
+}
+
+void main() {
+    var config1 = Config.fromJson({'apiUrl': 'https://prod.api', 'timeout': 45});
+    var config2 = Config.fromEnv();
+    var config3 = Config.defaultConfig();
+
+    print(config1);
+    print(config2);
+    print(config3);
+}</pre>
+                <button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/57d3b8a1f3d3f3b8a1f3d3f3b8a1f3d8')">▶ Buka di DartPad</button>
+                <div class="note">
+                    💡 Factory constructor memungkinkan pembuatan objek dari <strong>berbagai sumber</strong> dengan cara yang konsisten dan terstruktur.
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SLIDE 10: RESPONSE ===== -->
+        <section id="response">
+            <h2>📦 Response Class – Success / Error</h2>
+            <div class="card">
+                <p>Factory constructor untuk membuat <span class="code-inline">Response&lt;T&gt;</span> yang sukses atau error.</p>
+                <pre>abstract class Response&lt;T&gt; {
+    final T? data;
+    final String? error;
+
+    Response({this.data, this.error});
+
+    // Factory untuk success
+    factory Response.success(T data) = SuccessResponse&lt;T&gt;;
+
+    // Factory untuk error
+    factory Response.error(String error) = ErrorResponse&lt;T&gt;;
+}
+
+class SuccessResponse&lt;T&gt; extends Response&lt;T&gt; {
+    SuccessResponse(T data) : super(data: data);
+}
+
+class ErrorResponse&lt;T&gt; extends Response&lt;T&gt; {
+    ErrorResponse(String error) : super(error: error);
+}
+
+void main() {
+    var success = Response&lt;String&gt;.success('Data berhasil dimuat');
+    var error = Response&lt;int&gt;.error('Gagal memuat data');
+
+    print('Success: data=${success.data}, error=${success.error}');
+    print('Error: data=${error.data}, error=${error.error}');
+}</pre>
+                <button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/57d3b8a1f3d3f3b8a1f3d3f3b8a1f3d9')">▶ Buka di DartPad</button>
+                <div class="note">
+                    📦 Pola ini sangat umum di <strong>API handling</strong> — memisahkan respons sukses dan error dengan tipe yang aman.
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SLIDE 13: FACTORY vs STATIC ===== -->
+        <section id="vsstatic">
+            <h2>⚖️ Factory Constructor vs Static Method</h2>
+            <div class="card">
+                <p>Perbedaan utama: <strong>Factory constructor</strong> dapat digunakan di <span class="code-inline">new</span> expression dan mendukung <em>polymorphism</em>.</p>
+                <pre>class Example {
+    Example._() {}
+
+    // Factory constructor
+    factory Example.create() => Example._();
+
+    // Static method
+    static Example createStatic() => Example._();
+}
+
+void main() {
+    // Penggunaan sama secara sintaks
+    var e1 = Example.create();       // Factory constructor
+    var e2 = Example.createStatic(); // Static method
+
+    print('e1: $e1');
+    print('e2: $e2');
+    print('Apakah e1 dan e2 berbeda? ${e1 != e2}');
+}</pre>
+                <button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/57d3b8a1f3d3f3b8a1f3d3f3b8a1f3e0')">▶ Buka di DartPad</button>
+
+                <table style="margin-top:14px;">
+                    <thead>
+                        <tr><th>Aspek</th><th>Factory Constructor</th><th>Static Method</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Digunakan dengan <code>new</code></td><td class="good">✅ Ya</td><td class="bad">❌ Tidak</td></tr>
+                        <tr><td>Dapat mengembalikan subclass</td><td class="good">✅ Ya</td><td class="good">✅ Ya</td></tr>
+                        <tr><td>Mendukung inheritance</td><td class="good">✅ Ya</td><td class="bad">❌ Tidak</td></tr>
+                        <tr><td>Membuat instance baru</td><td class="warn">⚡ Opsional</td><td class="warn">⚡ Opsional</td></tr>
+                    </tbody>
+                </table>
+                <div class="note">
+                    💡 Gunakan <strong>factory constructor</strong> jika ingin objek dibuat dengan <em>syntax</em> seperti constructor dan mendukung polimorfisme. Gunakan <strong>static method</strong> untuk utility sederhana.
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SLIDE 14: COLOR ===== -->
+        <section id="color">
+            <h2>🎨 Color Class dengan Cache</h2>
+            <div class="card">
+                <p>Menggunakan factory constructor untuk meng-cache objek <span class="code-inline">Color</span> yang immutable.</p>
+                <pre>class Color {
+    final int red;
+    final int green;
+    final int blue;
+
+    // Cache immutable objects
+    static final Map&lt;String, Color&gt; _cache = {};
+
+    // Private constructor
+    Color._(this.red, this.green, this.blue);
+
+    // Factory dengan cache
+    factory Color.rgb(int red, int green, int blue) {
+        // Validasi
+        if (red < 0 || red > 255 ||
+            green < 0 || green > 255 ||
+            blue < 0 || blue > 255) {
+            throw ArgumentError('RGB values must be 0-255');
+        }
+        var key = '$red,$green,$blue';
+        if (!_cache.containsKey(key)) {
+            _cache[key] = Color._(red, green, blue);
+        }
+        return _cache[key]!;
+    }
+
+    // Named factories untuk warna umum
+    factory Color.red() => Color.rgb(255, 0, 0);
+    factory Color.green() => Color.rgb(0, 255, 0);
+    factory Color.blue() => Color.rgb(0, 0, 255);
+    factory Color.white() => Color.rgb(255, 255, 255);
+    factory Color.black() => Color.rgb(0, 0, 0);
+
+    @override
+    String toString() => 'Color($red, $green, $blue)';
+}
+
+void main() {
+    var red1 = Color.red();
+    var red2 = Color.rgb(255, 0, 0);
+    print(identical(red1, red2)); // true - instance sama
+    print(red1);
+    print(red2);
+}</pre>
+                <button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/57d3b8a1f3d3f3b8a1f3d3f3b8a1f3e1')">▶ Buka di DartPad</button>
+                <div class="note">
+                    🎯 Dengan cache, warna yang sama tidak dibuat berulang kali — menghemat memori untuk objek yang <strong>immutable</strong> dan sering digunakan.
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SLIDE 16: RINGKASAN ===== -->
+        <section id="ringkasan">
+            <h2>📝 Ringkasan &amp; Best Practices</h2>
+            <div class="card">
+                <h3 style="color:#38bdf8;">Ringkasan</h3>
+                <ul>
+                    <li><strong>Factory constructor:</strong> <span class="code-inline">factory Class.name()</span></li>
+                    <li>Bisa mengembalikan: <strong>instance yang ada</strong>, <strong>subclass</strong>, atau <strong>instance baru</strong>.</li>
+                    <li><strong>Use cases:</strong> Singleton, caching, object pooling, subclass selection.</li>
+                </ul>
+
+                <hr />
+
+                <h3 style="color:#38bdf8;">Best Practices</h3>
+                <ul>
+                    <li><strong>Gunakan factory untuk:</strong>
+                        <ul>
+                            <li>Object pooling / caching</li>
+                            <li>Singleton pattern</li>
+                            <li>Complex object creation</li>
+                            <li>Subclass selection</li>
+                        </ul>
+                    </li>
+                    <li><strong>Gunakan generative constructor untuk:</strong>
+                        <ul>
+                            <li>Simple object creation</li>
+                            <li>Initialization lists</li>
+                            <li>Required parameters</li>
+                        </ul>
+                    </li>
+                    <li><strong>Validation:</strong> Lakukan validasi di factory <em>sebelum</em> membuat objek.</li>
+                </ul>
+
+                <div class="note">
+                    ⚡ <strong>Ingat:</strong> Factory constructor <em>tidak</em> memiliki akses ke <span class="code-inline">this</span> sebelum objek dibuat — ia hanya bertugas <strong>mengembalikan</strong> instance.
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SLIDE 17: LATIHAN & CHALLENGE ===== -->
+        <section id="latihan">
+            <h2>🧩 Latihan &amp; Challenge</h2>
+
+            <!-- LATIHAN 1 -->
+            <div class="card">
+                <h3><span class="badge">Latihan 1</span> ConnectionFactory dengan Pooling</h3>
+                <p>Buat <span class="code-inline">ConnectionFactory</span> dengan pooling koneksi database.</p>
+                <div class="jawaban">
+                    <strong>✅ Jawaban:</strong>
+                    <pre>class ConnectionFactory {
+    final String host;
+    final int port;
+    final int maxPoolSize;
+
+    static final Map&lt;String, ConnectionFactory&gt; _pool = {};
+
+    ConnectionFactory._(this.host, this.port, this.maxPoolSize);
+
+    factory ConnectionFactory(String host, int port, {int maxPoolSize = 10}) {
+        var key = '$host:$port';
+        if (!_pool.containsKey(key)) {
+            _pool[key] = ConnectionFactory._(host, port, maxPoolSize);
+        }
+        return _pool[key]!;
+    }
+
+    void connect() {
+        print('Connecting to $host:$port (pool size: $maxPoolSize)');
+    }
+}
+
+void main() {
+    var conn1 = ConnectionFactory('localhost', 5432);
+    var conn2 = ConnectionFactory('localhost', 5432);
+    var conn3 = ConnectionFactory('db.example.com', 3306);
+
+    print(identical(conn1, conn2)); // true
+    print(identical(conn1, conn3)); // false
+    conn1.connect();
+}</pre>
+                    <button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/57d3b8a1f3d3f3b8a1f3d3f3b8a1f3e2')">▶ Buka di DartPad</button>
+                </div>
+            </div>
+
+            <!-- LATIHAN 2 -->
+            <div class="card">
+                <h3><span class="badge">Latihan 2</span> NotificationFactory</h3>
+                <p>Buat <span class="code-inline">NotificationFactory</span> yang memilih subclass berdasarkan platform.</p>
+                <div class="jawaban">
+                    <strong>✅ Jawaban:</strong>
+                    <pre>abstract class Notification {
+    void send(String message);
+}
+
+class EmailNotification implements Notification {
+    @override
+    void send(String message) {
+        print('Sending email: $message');
+    }
+}
+
+class SMSNotification implements Notification {
+    @override
+    void send(String message) {
+        print('Sending SMS: $message');
+    }
+}
+
+class PushNotification implements Notification {
+    @override
+    void send(String message) {
+        print('Sending push notification: $message');
+    }
+}
+
+class NotificationFactory {
+    static Notification create(String platform) {
+        switch (platform.toLowerCase()) {
+            case 'email':
+                return EmailNotification();
+            case 'sms':
+                return SMSNotification();
+            case 'push':
+                return PushNotification();
+            default:
+                throw ArgumentError('Unknown platform: $platform');
+        }
+    }
+}
+
+void main() {
+    var emailNotif = NotificationFactory.create('email');
+    var smsNotif = NotificationFactory.create('sms');
+    var pushNotif = NotificationFactory.create('push');
+
+    emailNotif.send('Welcome to our app!');
+    smsNotif.send('Your OTP is 1234');
+    pushNotif.send('You have a new message');
+}</pre>
+                    <button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/57d3b8a1f3d3f3b8a1f3d3f3b8a1f3e3')">▶ Buka di DartPad</button>
+                </div>
+            </div>
+
+            <!-- LATIHAN 3 -->
+            <div class="card">
+                <h3><span class="badge">Latihan 3</span> ShapeFactory dengan Cache</h3>
+                <p>Buat <span class="code-inline">ShapeFactory</span> dengan cache untuk shapes yang sama.</p>
+                <div class="jawaban">
+                    <strong>✅ Jawaban:</strong>
+                    <pre>abstract class Shape {
+    void draw();
+    String get type;
+}
+
+class Circle implements Shape {
+    final double radius;
+    Circle(this.radius);
+    @override
+    void draw() => print('Drawing Circle with radius $radius');
+    @override
+    String get type => 'Circle($radius)';
+}
+
+class Square implements Shape {
+    final double side;
+    Square(this.side);
+    @override
+    void draw() => print('Drawing Square with side $side');
+    @override
+    String get type => 'Square($side)';
+}
+
+class ShapeFactory {
+    static final Map&lt;String, Shape&gt; _cache = {};
+
+    static Shape createCircle(double radius) {
+        var key = 'Circle-$radius';
+        if (!_cache.containsKey(key)) {
+            _cache[key] = Circle(radius);
+        }
+        return _cache[key]!;
+    }
+
+    static Shape createSquare(double side) {
+        var key = 'Square-$side';
+        if (!_cache.containsKey(key)) {
+            _cache[key] = Square(side);
+        }
+        return _cache[key]!;
+    }
+}
+
+void main() {
+    var c1 = ShapeFactory.createCircle(5.0);
+    var c2 = ShapeFactory.createCircle(5.0);
+    var c3 = ShapeFactory.createCircle(7.0);
+
+    print(identical(c1, c2)); // true
+    print(identical(c1, c3)); // false
+
+    c1.draw();
+    c3.draw();
+}</pre>
+                    <button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/57d3b8a1f3d3f3b8a1f3d3f3b8a1f3e4')">▶ Buka di DartPad</button>
+                </div>
+            </div>
+
+            <!-- CHALLENGE -->
+            <div class="card">
+                <h3><span class="challenge-tag">🔥 Challenge</span> AnimalFactory</h3>
+                <p>Buat <span class="code-inline">AnimalFactory</span> dengan:</p>
+                <ul>
+                    <li>Factory method untuk membuat berbagai jenis hewan</li>
+                    <li>Cache untuk hewan dengan atribut sama</li>
+                    <li>Validation untuk parameter</li>
+                    <li>Subclass selection berdasarkan input</li>
+                </ul>
+                <div class="jawaban">
+                    <strong>✅ Jawaban Challenge:</strong>
+                    <pre>abstract class Animal {
+    String get name;
+    String speak();
+}
+
+class Dog implements Animal {
+    final String _name;
+    Dog(this._name) {
+        if (_name.isEmpty) throw ArgumentError('Name cannot be empty');
+    }
+    @override
+    String get name => _name;
+    @override
+    String speak() => 'Woof!';
+}
+
+class Cat implements Animal {
+    final String _name;
+    Cat(this._name) {
+        if (_name.isEmpty) throw ArgumentError('Name cannot be empty');
+    }
+    @override
+    String get name => _name;
+    @override
+    String speak() => 'Meow!';
+}
+
+class Cow implements Animal {
+    final String _name;
+    Cow(this._name) {
+        if (_name.isEmpty) throw ArgumentError('Name cannot be empty');
+    }
+    @override
+    String get name => _name;
+    @override
+    String speak() => 'Moo!';
+}
+
+class AnimalFactory {
+    static final Map&lt;String, Animal&gt; _cache = {};
+
+    static Animal create(String type, String name) {
+        if (name.isEmpty) {
+            throw ArgumentError('Animal name cannot be empty');
+        }
+
+        var key = '$type:$name';
+
+        if (_cache.containsKey(key)) {
+            return _cache[key]!;
+        }
+
+        Animal animal;
+        switch (type.toLowerCase()) {
+            case 'dog':
+                animal = Dog(name);
+                break;
+            case 'cat':
+                animal = Cat(name);
+                break;
+            case 'cow':
+                animal = Cow(name);
+                break;
+            default:
+                throw ArgumentError('Unknown animal type: $type');
+        }
+
+        _cache[key] = animal;
+        return animal;
+    }
+}
+
+void main() {
+    // Test cache
+    var dog1 = AnimalFactory.create('dog', 'Buddy');
+    var dog2 = AnimalFactory.create('dog', 'Buddy');
+    var dog3 = AnimalFactory.create('dog', 'Rex');
+
+    print(identical(dog1, dog2)); // true
+    print(identical(dog1, dog3)); // false
+
+    print('${dog1.name} says ${dog1.speak()}');
+    print('${dog3.name} says ${dog3.speak()}');
+
+    // Test cat
+    var cat = AnimalFactory.create('cat', 'Whiskers');
+    print('${cat.name} says ${cat.speak()}');
+
+    // Test cow
+    var cow = AnimalFactory.create('cow', 'Bessie');
+    print('${cow.name} says ${cow.speak()}');
+
+    // Test validation
+    try {
+        AnimalFactory.create('dog', '');
+    } catch (e) {
+        print('Validation works: $e');
+    }
+
+    // Test unknown type
+    try {
+        AnimalFactory.create('bird', 'Tweety');
+    } catch (e) {
+        print('Unknown type handled: $e');
+    }
+}</pre>
+                    <button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/57d3b8a1f3d3f3b8a1f3d3f3b8a1f3e5')">▶ Buka di DartPad</button>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- MODAL DARTPAD -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="color:#38bdf8;">🧪 DartPad</h3>
+                <span onclick="closeModal()">✖</span>
+            </div>
+            <iframe id="dartpadFrame" style="width:100%; height:100%;"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // ---- SIDEBAR TOGGLE (mobile) ----
+        function toggleMenu() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        }
+
+        // ---- SEARCH ----
+        function searchMenu(input) {
+            var filter = input.value.toLowerCase();
+            document.querySelectorAll('.sidebar a').forEach(function(link) {
+                var text = link.innerText.toLowerCase();
+                link.style.display = text.includes(filter) ? 'block' : 'none';
+            });
+        }
+
+        // ---- PROGRESS BAR ----
+        window.onscroll = function() {
+            var winScroll = document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        };
+
+        // ---- FUNGSI UTAMA: BUKA DARTPAD DENGAN URL ----
+        function openDartpad(url) {
+            var frame = document.getElementById('dartpadFrame');
+            if (!frame) return;
+            frame.src = url;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        // ---- FUNGSI ALTERNATIF: BUKA DARTPAD DARI KODE DI <pre> ----
+        function openDartpadFromPre(btn) {
+            var pre = btn.previousElementSibling;
+            while (pre && pre.tagName !== 'PRE') {
+                pre = pre.previousElementSibling;
+            }
+            if (!pre) return;
+
+            var code = pre.textContent;
+            var encoded = encodeURIComponent(code);
+            var url = 'https://dartpad.dev/embed-flutter.html?code=' + encoded + '&run=true&split=50';
+
+            var frame = document.getElementById('dartpadFrame');
+            if (!frame) return;
+            frame.src = url;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        // ---- TUTUP MODAL ----
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            var frame = document.getElementById('dartpadFrame');
+            if (frame) frame.src = '';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+
+</body>
+</html>
