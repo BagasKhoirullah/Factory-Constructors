@@ -446,24 +446,26 @@
             <h2>📐 Sintaks Factory Constructor</h2>
             <div class="card">
                 <pre>class MyClass {
-    // Generative constructor (biasa)
-    MyClass();
+  // Generative constructor (biasa)
+  MyClass();
 
-    // Factory constructor
-    factory MyClass.create() {
-        // Bisa return instance yang sudah ada
-        // Atau instance dari subclass
-        // Atau instance baru
-        return MyClass();
-    }
+  // Factory constructor
+  factory MyClass.create() {
+    // Bisa mengembalikan instance yang sudah ada,
+    // instance subclass, atau instance baru
+    return MyClass();
+  }
 }
 
 void main() {
-    // Perbedaan penggunaan
-    var obj1 = MyClass();      // Generative
-    var obj2 = MyClass.create(); // Factory
+  // Perbedaan penggunaan
+  var obj1 = MyClass();         // Generative constructor
+  var obj2 = MyClass.create();  // Factory constructor
+
+  print(obj1);
+  print(obj2);
 }</pre>
-<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/8b926313aeaff3e1ddc3f26cbdd9098e')">▶ Buka di DartPad</button>
                 <p style="margin-top:8px; color:#94a3b8;">📌 Factory constructor <strong>harus</strong> mengembalikan instance dari tipe yang sama atau subclass-nya.</p>
             </div>
         </section>
@@ -500,7 +502,7 @@ void main() {
     db1.connect();
     db2.connect();
 }</pre>
-<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/05e6961900892e75ced79115e0c7905b')">▶ Buka di DartPad</button>
                 <div class="note">
                     ✅ Dengan factory constructor, kita memastikan hanya <strong>satu instance</strong> yang dibuat dan digunakan di seluruh aplikasi.
                 </div>
@@ -513,52 +515,55 @@ void main() {
             <div class="card">
                 <p>Cache koneksi berdasarkan parameter <span class="code-inline">host</span> dan <span class="code-inline">port</span>.</p>
                 <pre>class ConnectionPool {
-    final String host;
-    final int port;
+  final String host;
+  final int port;
 
-    // Cache berdasarkan parameter
-    static final Map&lt;String, ConnectionPool&gt; _cache = {};
+  // Cache berdasarkan parameter
+  static final Map<String, ConnectionPool> _cache = {};
 
-    // Private constructor
-    ConnectionPool._(this.host, this.port);
+  // Private constructor
+  ConnectionPool._(this.host, this.port);
 
-    // Factory dengan caching
-    factory ConnectionPool(String host, int port) {
-        var key = '$host:$port';
-        // Return dari cache jika ada
-        if (_cache.containsKey(key)) {
-            print('Returning cached connection for $key');
-            return _cache[key]!;
-        }
-        // Buat baru dan cache
-        print('Creating new connection for $key');
-        var connection = ConnectionPool._(host, port);
-        _cache[key] = connection;
-        return connection;
+  // Factory dengan caching
+  factory ConnectionPool(String host, int port) {
+    var key = '$host:$port';
+
+    // Return dari cache jika ada
+    if (_cache.containsKey(key)) {
+      print('Returning cached connection for $key');
+      return _cache[key]!;
     }
 
-    void query(String sql) {
-        print('Executing: "$sql" on $host:$port');
-    }
+    // Buat baru dan cache
+    print('Creating new connection for $key');
+    var connection = ConnectionPool._(host, port);
+    _cache[key] = connection;
+
+    return connection;
+  }
+
+  void query(String sql) {
+    print('Executing: "$sql" on $host:$port');
+  }
 }
 
 void main() {
-    print('-- Creating conn1 (localhost:5432) --');
-    var conn1 = ConnectionPool('localhost', 5432);
-    conn1.query('SELECT * FROM users;');
+  print('-- Creating conn1 (localhost:5432) --');
+  var conn1 = ConnectionPool('localhost', 5432);
+  conn1.query('SELECT * FROM users;');
 
-    print('\n-- Creating conn2 (localhost:5432 - should be cached) --');
-    var conn2 = ConnectionPool('localhost', 5432);
-    conn2.query('INSERT INTO products (name) VALUES (\'Laptop\');');
+  print('\n-- Creating conn2 (localhost:5432 - should be cached) --');
+  var conn2 = ConnectionPool('localhost', 5432);
+  conn2.query("INSERT INTO products (name) VALUES ('Laptop');");
 
-    print('\n-- Creating conn3 (db.example.com:3306 - new connection) --');
-    var conn3 = ConnectionPool('db.example.com', 3306);
-    conn3.query('UPDATE orders SET status=\'shipped\' WHERE id=101');
+  print('\n-- Creating conn3 (db.example.com:3306 - new connection) --');
+  var conn3 = ConnectionPool('db.example.com', 3306);
+  conn3.query("UPDATE orders SET status='shipped' WHERE id=101");
 
-    print('\n-- Are conn1 and conn2 the same instance? ${identical(conn1, conn2)}');
-    print('-- Are conn1 and conn3 the same instance? ${identical(conn1, conn3)}');
+  print('\n-- Are conn1 and conn2 the same instance? ${identical(conn1, conn2)}');
+  print('-- Are conn1 and conn3 the same instance? ${identical(conn1, conn3)}');
 }</pre>
-<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/20092f871f3f3164a141a14654b9aac2')">▶ Buka di DartPad</button>
                 <div class="note">
                     🗂️ Factory constructor memeriksa cache terlebih dahulu. Jika sudah ada, kembalikan instance yang sama — <strong>efisien</strong> untuk resource-heavy objects.
                 </div>
@@ -623,7 +628,7 @@ void main() {
 
     // var unknown = Shape('pentagon'); // throws ArgumentError
 }</pre>
-<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/46afc34107717c292b359d6564bc5305')">▶ Buka di DartPad</button>
                 <div class="note">
                     🔀 Factory constructor bertindak sebagai <strong>factory method</strong> yang memilih subclass yang tepat berdasarkan input, menjaga kode klien tetap sederhana.
                 </div>
@@ -636,55 +641,65 @@ void main() {
             <div class="card">
                 <p>Membuat factory untuk objek <span class="code-inline">Config</span> dengan berbagai source (file, environment, default).</p>
                 <pre>class Config {
-    final String apiUrl;
-    final int timeout;
-    final bool debug;
+  final String apiUrl;
+  final int timeout;
+  final bool debug;
 
-    // Private constructor
-    Config._({required this.apiUrl, required this.timeout, required this.debug});
+  // Private constructor
+  Config._({
+    required this.apiUrl,
+    required this.timeout,
+    required this.debug,
+  });
 
-    // Factory dari file JSON (simulasi)
-    factory Config.fromJson(Map&lt;String, dynamic&gt; json) {
-        return Config._(
-            apiUrl: json['apiUrl'] ?? 'https://default.api',
-            timeout: json['timeout'] ?? 30,
-            debug: json['debug'] ?? false,
-        );
-    }
+  // Factory dari file JSON (simulasi)
+  factory Config.fromJson(Map<String, dynamic> json) {
+    return Config._(
+      apiUrl: json['apiUrl'] ?? 'https://default.api',
+      timeout: json['timeout'] ?? 30,
+      debug: json['debug'] ?? false,
+    );
+  }
 
-    // Factory dari environment (simulasi)
-    factory Config.fromEnv() {
-        // Dalam realita, membaca dari Platform.environment
-        return Config._(
-            apiUrl: 'https://env.api',
-            timeout: 60,
-            debug: true,
-        );
-    }
+  // Factory dari environment (simulasi)
+  factory Config.fromEnv() {
+    // Dalam realita, membaca dari Platform.environment
+    return Config._(
+      apiUrl: 'https://env.api',
+      timeout: 60,
+      debug: true,
+    );
+  }
 
-    // Factory default
-    factory Config.defaultConfig() {
-        return Config._(
-            apiUrl: 'https://default.api',
-            timeout: 30,
-            debug: false,
-        );
-    }
+  // Factory default
+  factory Config.defaultConfig() {
+    return Config._(
+      apiUrl: 'https://default.api',
+      timeout: 30,
+      debug: false,
+    );
+  }
 
-    @override
-    String toString() => 'Config(apiUrl: $apiUrl, timeout: $timeout, debug: $debug)';
+  @override
+  String toString() {
+    return 'Config(apiUrl: $apiUrl, timeout: $timeout, debug: $debug)';
+  }
 }
 
 void main() {
-    var config1 = Config.fromJson({'apiUrl': 'https://prod.api', 'timeout': 45});
-    var config2 = Config.fromEnv();
-    var config3 = Config.defaultConfig();
+  var config1 = Config.fromJson({
+    'apiUrl': 'https://prod.api',
+    'timeout': 45,
+  });
 
-    print(config1);
-    print(config2);
-    print(config3);
+  var config2 = Config.fromEnv();
+  var config3 = Config.defaultConfig();
+
+  print(config1);
+  print(config2);
+  print(config3);
 }</pre>
-<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/3be64d168af89e6615766ebf258b725b')">▶ Buka di DartPad</button>
                 <div class="note">
                     💡 Factory constructor memungkinkan pembuatan objek dari <strong>berbagai sumber</strong> dengan cara yang konsisten dan terstruktur.
                 </div>
@@ -696,36 +711,36 @@ void main() {
             <h2>🏷️ Factory dengan Named Constructors</h2>
             <div class="card">
                 <p>Factory constructor bisa memiliki <strong>nama</strong> (seperti generative constructor). Ini memudahkan pembuatan objek dengan tujuan yang berbeda secara semantik, misalnya <span class="code-inline">Response.success()</span> dan <span class="code-inline">Response.error()</span>.</p>
-                <pre>abstract class Response&lt;T&gt; {
-    final T? data;
-    final String? error;
+                <pre>abstract class Response<T> {
+  final T? data;
+  final String? error;
 
-    Response({this.data, this.error});
+  Response({this.data, this.error});
 
-    // Factory dengan named constructor 'success'
-    factory Response.success(T data) = SuccessResponse&lt;T&gt;;
+  // Factory dengan named constructor 'success'
+  factory Response.success(T data) = SuccessResponse<T>;
 
-    // Factory dengan named constructor 'error'
-    factory Response.error(String error) = ErrorResponse&lt;T&gt;;
+  // Factory dengan named constructor 'error'
+  factory Response.error(String error) = ErrorResponse<T>;
 }
 
-class SuccessResponse&lt;T&gt; extends Response&lt;T&gt; {
-    SuccessResponse(T data) : super(data: data);
+class SuccessResponse<T> extends Response<T> {
+  SuccessResponse(T data) : super(data: data);
 }
 
-class ErrorResponse&lt;T&gt; extends Response&lt;T&gt; {
-    ErrorResponse(String error) : super(error: error);
+class ErrorResponse<T> extends Response<T> {
+  ErrorResponse(String error) : super(error: error);
 }
 
 void main() {
-    // Penggunaan named factory
-    var success = Response&lt;String&gt;.success('Data berhasil dimuat');
-    var error = Response&lt;int&gt;.error('Gagal memuat data');
+  // Penggunaan named factory
+  var success = Response<String>.success('Data berhasil dimuat');
+  var error = Response<int>.error('Gagal memuat data');
 
-    print('Success: data=${success.data}, error=${success.error}');
-    print('Error: data=${error.data}, error=${error.error}');
+  print('Success: data=${success.data}, error=${success.error}');
+  print('Error: data=${error.data}, error=${error.error}');
 }</pre>
-<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/19483cffa924865f5ce2e0f9abcc5dd9')">▶ Buka di DartPad</button>
                 <div class="note">
                     📌 <strong>Named constructors</strong> pada factory membuat kode lebih ekspresif dan mudah dibaca, mirip dengan <span class="code-inline">DateTime.now()</span> atau <span class="code-inline">Uri.parse()</span>.
                 </div>
@@ -737,36 +752,45 @@ void main() {
             <h2>🧬 Factory dengan Generic</h2>
             <div class="card">
                 <p>Factory constructor dapat digunakan pada <strong>tipe generik</strong> (<span class="code-inline">&lt;T&gt;</span>) untuk memastikan <em>type safety</em>. Dengan redirecting factory, kita dapat mengembalikan subclass yang sesuai dengan tipe data.</p>
-                <pre>abstract class Response&lt;T&gt; {
-    final T? data;
-    final String? error;
+                <pre>// M BAGAS KHOIRULLAH (251410016) SI2A 
+abstract class Response<T> {
+  final T? data;
+  final String? error;
 
-    Response({this.data, this.error});
+  Response({this.data, this.error});
 
-    // Redirecting factory ke subclass dengan generic T
-    factory Response.success(T data) = SuccessResponse&lt;T&gt;;
-    factory Response.error(String error) = ErrorResponse&lt;T&gt;;
+  // Redirecting factory ke subclass dengan generic T
+  factory Response.success(T data) = SuccessResponse<T>;
+  factory Response.error(String error) = ErrorResponse<T>;
 }
 
-class SuccessResponse&lt;T&gt; extends Response&lt;T&gt; {
-    SuccessResponse(T data) : super(data: data);
+class SuccessResponse<T> extends Response<T> {
+  SuccessResponse(T data) : super(data: data);
 }
 
-class ErrorResponse&lt;T&gt; extends Response&lt;T&gt; {
-    ErrorResponse(String error) : super(error: error);
+class ErrorResponse<T> extends Response<T> {
+  ErrorResponse(String error) : super(error: error);
 }
 
 void main() {
-    // Tipe data ditentukan saat pemanggilan
-    var intResponse = Response&lt;int&gt;.success(100);
-    var stringResponse = Response&lt;String&gt;.success('Hello');
-    var errorResponse = Response&lt;bool&gt;.error('Failed');
+  // Tipe data ditentukan saat pemanggilan
+  var intResponse = Response<int>.success(100);
+  var stringResponse = Response<String>.success('Hello');
+  var errorResponse = Response<bool>.error('Failed');
 
-    print('intResponse data: ${intResponse.data} (type: ${intResponse.data.runtimeType})');
-    print('stringResponse data: ${stringResponse.data} (type: ${stringResponse.data.runtimeType})');
-    print('errorResponse error: ${errorResponse.error}');
+  print(
+    'intResponse data: ${intResponse.data} '
+    '(type: ${intResponse.data.runtimeType})',
+  );
+
+  print(
+    'stringResponse data: ${stringResponse.data} '
+    '(type: ${stringResponse.data.runtimeType})',
+  );
+
+  print('errorResponse error: ${errorResponse.error}');
 }</pre>
-<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/f29d6e6e34dc37186f81b152ad43203b')">▶ Buka di DartPad</button>
                 <div class="note">
                     🧩 <strong>Generic</strong> pada factory memungkinkan pembuatan objek yang <em>type-safe</em> tanpa kehilangan fleksibilitas, sekaligus mendukung <strong>redirecting</strong> ke subclass.
                 </div>
@@ -779,85 +803,116 @@ void main() {
             <div class="card">
                 <p>Membuat factory yang memilih subclass payment berdasarkan tipe pembayaran, dengan validasi dan cache sederhana.</p>
                 <pre>abstract class Payment {
-    void pay(double amount);
-    String get method;
+  void pay(double amount);
+  String get method;
 }
 
 class CreditCardPayment implements Payment {
-    final String cardNumber;
-    CreditCardPayment(this.cardNumber) {
-        if (cardNumber.length < 16) throw ArgumentError('Invalid card number');
+  final String cardNumber;
+
+  CreditCardPayment(this.cardNumber) {
+    if (cardNumber.length < 16) {
+      throw ArgumentError('Invalid card number');
     }
-    @override
-    void pay(double amount) => print('Paid \$$amount using Credit Card ($cardNumber)');
-    @override
-    String get method => 'CreditCard';
+  }
+
+  @override
+  void pay(double amount) =>
+      print('Paid \$$amount using Credit Card ($cardNumber)');
+
+  @override
+  String get method => 'CreditCard';
 }
 
 class PayPalPayment implements Payment {
-    final String email;
-    PayPalPayment(this.email) {
-        if (!email.contains('@')) throw ArgumentError('Invalid email');
+  final String email;
+
+  PayPalPayment(this.email) {
+    if (!email.contains('@')) {
+      throw ArgumentError('Invalid email');
     }
-    @override
-    void pay(double amount) => print('Paid \$$amount using PayPal ($email)');
-    @override
-    String get method => 'PayPal';
+  }
+
+  @override
+  void pay(double amount) =>
+      print('Paid \$$amount using PayPal ($email)');
+
+  @override
+  String get method => 'PayPal';
 }
 
 class CryptoPayment implements Payment {
-    final String walletAddress;
-    CryptoPayment(this.walletAddress) {
-        if (walletAddress.length < 20) throw ArgumentError('Invalid wallet address');
+  final String walletAddress;
+
+  CryptoPayment(this.walletAddress) {
+    if (walletAddress.length < 20) {
+      throw ArgumentError('Invalid wallet address');
     }
-    @override
-    void pay(double amount) => print('Paid \$$amount using Crypto ($walletAddress)');
-    @override
-    String get method => 'Crypto';
+  }
+
+  @override
+  void pay(double amount) =>
+      print('Paid \$$amount using Crypto ($walletAddress)');
+
+  @override
+  String get method => 'Crypto';
 }
 
 class PaymentFactory {
-    static final Map&lt;String, Payment&gt; _cache = {};
+  static final Map<String, Payment> _cache = {};
 
-    static Payment create(String type, String identifier) {
-        var key = '$type:$identifier';
-        if (_cache.containsKey(key)) {
-            print('Returning cached payment: $key');
-            return _cache[key]!;
-        }
+  static Payment create(String type, String identifier) {
+    var key = '$type:$identifier';
 
-        Payment payment;
-        switch (type.toLowerCase()) {
-            case 'creditcard':
-                payment = CreditCardPayment(identifier);
-                break;
-            case 'paypal':
-                payment = PayPalPayment(identifier);
-                break;
-            case 'crypto':
-                payment = CryptoPayment(identifier);
-                break;
-            default:
-                throw ArgumentError('Unknown payment type: $type');
-        }
-        _cache[key] = payment;
-        return payment;
+    if (_cache.containsKey(key)) {
+      print('Returning cached payment: $key');
+      return _cache[key]!;
     }
+
+    Payment payment;
+
+    switch (type.toLowerCase()) {
+      case 'creditcard':
+        payment = CreditCardPayment(identifier);
+        break;
+
+      case 'paypal':
+        payment = PayPalPayment(identifier);
+        break;
+
+      case 'crypto':
+        payment = CryptoPayment(identifier);
+        break;
+
+      default:
+        throw ArgumentError('Unknown payment type: $type');
+    }
+
+    _cache[key] = payment;
+    return payment;
+  }
 }
 
 void main() {
-    var cc1 = PaymentFactory.create('creditcard', '1234567812345678');
-    var cc2 = PaymentFactory.create('creditcard', '1234567812345678'); // cached
-    var pp = PaymentFactory.create('paypal', 'user@example.com');
-    var crypto = PaymentFactory.create('crypto', '0xabcdef1234567890');
+  var cc1 = PaymentFactory.create(
+      'creditcard', '1234567812345678');
 
-    cc1.pay(100.0);
-    pp.pay(50.0);
-    crypto.pay(200.0);
+  var cc2 = PaymentFactory.create(
+      'creditcard', '1234567812345678'); // cached
 
-    print(identical(cc1, cc2)); // true
+  var pp = PaymentFactory.create(
+      'paypal', 'user@example.com');
+
+  var crypto = PaymentFactory.create(
+      'crypto', '0xabcdef12345678901234');
+
+  cc1.pay(100.0);
+  pp.pay(50.0);
+  crypto.pay(200.0);
+
+  print('cc1 dan cc2 objek yang sama? ${identical(cc1, cc2)}');
 }</pre>
-<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/1576d512e973e2b7f7d592eb5c7eba32')">▶ Buka di DartPad</button>
             <div class="note">
                     💳 Factory menangani <strong>validasi</strong>, <strong>cache</strong>, dan <strong>pemilihan subclass</strong> — semua dalam satu titik pembuatan objek.
                 </div>
@@ -869,51 +924,59 @@ void main() {
             <h2>🎨 Factory untuk Immutable Objects dengan Cache (Color)</h2>
             <div class="card">
                 <p>Menggunakan factory constructor untuk meng-cache objek <strong>immutable</strong> (Color) sehingga instance yang sama digunakan untuk nilai yang sama.</p>
-                <pre>class Color {
-    final int red;
-    final int green;
-    final int blue;
+                <pre>// M BAGAS KHOIRULLAH (251410016) SI2A 
+class Color {
+  final int red;
+  final int green;
+  final int blue;
 
-    // Cache immutable objects
-    static final Map&lt;String, Color&gt; _cache = {};
+  // Cache immutable objects
+  static final Map<String, Color> _cache = {};
 
-    // Private constructor
-    Color._(this.red, this.green, this.blue);
+  // Private constructor
+  Color._(this.red, this.green, this.blue);
 
-    // Factory dengan cache
-    factory Color.rgb(int red, int green, int blue) {
-        // Validasi
-        if (red < 0 || red > 255 ||
-            green < 0 || green > 255 ||
-            blue < 0 || blue > 255) {
-            throw ArgumentError('RGB values must be 0-255');
-        }
-        var key = '$red,$green,$blue';
-        if (!_cache.containsKey(key)) {
-            _cache[key] = Color._(red, green, blue);
-        }
-        return _cache[key]!;
+  // Factory dengan cache
+  factory Color.rgb(int red, int green, int blue) {
+    // Validasi
+    if (red < 0 ||
+        red > 255 ||
+        green < 0 ||
+        green > 255 ||
+        blue < 0 ||
+        blue > 255) {
+      throw ArgumentError('RGB values must be 0-255');
     }
 
-    // Named factories untuk warna umum
-    factory Color.red() => Color.rgb(255, 0, 0);
-    factory Color.green() => Color.rgb(0, 255, 0);
-    factory Color.blue() => Color.rgb(0, 0, 255);
-    factory Color.white() => Color.rgb(255, 255, 255);
-    factory Color.black() => Color.rgb(0, 0, 0);
+    var key = '$red,$green,$blue';
 
-    @override
-    String toString() => 'Color($red, $green, $blue)';
+    if (!_cache.containsKey(key)) {
+      _cache[key] = Color._(red, green, blue);
+    }
+
+    return _cache[key]!;
+  }
+
+  // Named factories untuk warna umum
+  factory Color.red() => Color.rgb(255, 0, 0);
+  factory Color.green() => Color.rgb(0, 255, 0);
+  factory Color.blue() => Color.rgb(0, 0, 255);
+  factory Color.white() => Color.rgb(255, 255, 255);
+  factory Color.black() => Color.rgb(0, 0, 0);
+
+  @override
+  String toString() => 'Color($red, $green, $blue)';
 }
 
 void main() {
-    var red1 = Color.red();
-    var red2 = Color.rgb(255, 0, 0);
-    print(identical(red1, red2)); // true - instance sama
-    print(red1);
-    print(red2);
+  var red1 = Color.red();
+  var red2 = Color.rgb(255, 0, 0);
+
+  print(identical(red1, red2)); // true - instance sama
+  print(red1);
+  print(red2);
 }</pre>
-<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/5c0fb42411bf915b18f4cf8c20683851')">▶ Buka di DartPad</button>
                 <div class="note">
                     🎯 Dengan cache, warna yang sama tidak dibuat berulang kali — menghemat memori untuk objek yang <strong>immutable</strong> dan sering digunakan.
                 </div>
@@ -925,95 +988,120 @@ void main() {
             <h2>📄 Studi Kasus – Document Factory</h2>
             <div class="card">
                 <p>Factory untuk membuat berbagai jenis dokumen (Word, PDF, Excel) dengan cache dan validasi ekstensi file.</p>
-                <pre>abstract class Document {
-    void open();
-    void save();
-    String get extension;
+                <pre>// M BAGAS KHOIRULLAH (251410016) SI2A 
+abstract class Document {
+  void open();
+  void save();
+  String get extension;
 }
 
 class WordDocument implements Document {
-    final String fileName;
-    WordDocument(this.fileName) {
-        if (!fileName.endsWith('.docx')) throw ArgumentError('Must be .docx');
+  final String fileName;
+
+  WordDocument(this.fileName) {
+    if (!fileName.endsWith('.docx')) {
+      throw ArgumentError('Must be .docx');
     }
-    @override
-    void open() => print('Opening Word document: $fileName');
-    @override
-    void save() => print('Saving Word document: $fileName');
-    @override
-    String get extension => '.docx';
+  }
+
+  @override
+  void open() => print('Opening Word document: $fileName');
+
+  @override
+  void save() => print('Saving Word document: $fileName');
+
+  @override
+  String get extension => '.docx';
 }
 
 class PdfDocument implements Document {
-    final String fileName;
-    PdfDocument(this.fileName) {
-        if (!fileName.endsWith('.pdf')) throw ArgumentError('Must be .pdf');
+  final String fileName;
+
+  PdfDocument(this.fileName) {
+    if (!fileName.endsWith('.pdf')) {
+      throw ArgumentError('Must be .pdf');
     }
-    @override
-    void open() => print('Opening PDF document: $fileName');
-    @override
-    void save() => print('Saving PDF document: $fileName');
-    @override
-    String get extension => '.pdf';
+  }
+
+  @override
+  void open() => print('Opening PDF document: $fileName');
+
+  @override
+  void save() => print('Saving PDF document: $fileName');
+
+  @override
+  String get extension => '.pdf';
 }
 
 class ExcelDocument implements Document {
-    final String fileName;
-    ExcelDocument(this.fileName) {
-        if (!fileName.endsWith('.xlsx')) throw ArgumentError('Must be .xlsx');
+  final String fileName;
+
+  ExcelDocument(this.fileName) {
+    if (!fileName.endsWith('.xlsx')) {
+      throw ArgumentError('Must be .xlsx');
     }
-    @override
-    void open() => print('Opening Excel document: $fileName');
-    @override
-    void save() => print('Saving Excel document: $fileName');
-    @override
-    String get extension => '.xlsx';
+  }
+
+  @override
+  void open() => print('Opening Excel document: $fileName');
+
+  @override
+  void save() => print('Saving Excel document: $fileName');
+
+  @override
+  String get extension => '.xlsx';
 }
 
 class DocumentFactory {
-    static final Map&lt;String, Document&gt; _cache = {};
+  static final Map<String, Document> _cache = {};
 
-    static Document create(String fileName) {
-        var key = fileName.toLowerCase();
-        if (_cache.containsKey(key)) {
-            print('Returning cached document: $key');
-            return _cache[key]!;
-        }
+  static Document create(String fileName) {
+    var key = fileName.toLowerCase();
 
-        Document doc;
-        if (fileName.endsWith('.docx')) {
-            doc = WordDocument(fileName);
-        } else if (fileName.endsWith('.pdf')) {
-            doc = PdfDocument(fileName);
-        } else if (fileName.endsWith('.xlsx')) {
-            doc = ExcelDocument(fileName);
-        } else {
-            throw ArgumentError('Unsupported file type: $fileName');
-        }
-        _cache[key] = doc;
-        return doc;
+    if (_cache.containsKey(key)) {
+      print('Returning cached document: $key');
+      return _cache[key]!;
     }
+
+    Document doc;
+
+    if (fileName.endsWith('.docx')) {
+      doc = WordDocument(fileName);
+    } else if (fileName.endsWith('.pdf')) {
+      doc = PdfDocument(fileName);
+    } else if (fileName.endsWith('.xlsx')) {
+      doc = ExcelDocument(fileName);
+    } else {
+      throw ArgumentError('Unsupported file type: $fileName');
+    }
+
+    _cache[key] = doc;
+    return doc;
+  }
 }
 
 void main() {
-    var word1 = DocumentFactory.create('report.docx');
-    var word2 = DocumentFactory.create('report.docx'); // cached
-    var pdf = DocumentFactory.create('presentation.pdf');
-    var excel = DocumentFactory.create('data.xlsx');
+  var word1 = DocumentFactory.create('report.docx');
+  var word2 = DocumentFactory.create('report.docx'); // cached
+  var pdf = DocumentFactory.create('presentation.pdf');
+  var excel = DocumentFactory.create('data.xlsx');
 
-    word1.open();
-    pdf.open();
-    excel.open();
+  word1.open();
+  pdf.open();
+  excel.open();
 
-    print(identical(word1, word2)); // true
+  print(identical(word1, word2)); // true
 
-    // try {
-    //   DocumentFactory.create('file.txt');
-    // } catch (e) {
-    //   print(e); // Unsupported file type
-    // }
+  // Contoh error:
+  /*
+  try {
+    DocumentFactory.create('file.txt');
+  } catch (e) {
+    print(e);
+  }
+  */
 }</pre>
-<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/8f7e0db855ea9f69bbebc68301ff8616')">▶ Buka di DartPad</button>
                 <div class="note">
                     📄 Factory ini menangani <strong>validasi ekstensi</strong>, <strong>cache</strong>, dan <strong>pembuatan subclass</strong> yang sesuai — sangat berguna dalam aplikasi pengolah dokumen.
                 </div>
@@ -1044,7 +1132,7 @@ void main() {
     print('e2: $e2');
     print('Apakah e1 dan e2 berbeda? ${e1 != e2}');
 }</pre>
-<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/0f01a5adb1fb0fd673b9f73c1962c044')">▶ Buka di DartPad</button>
                 <table style="margin-top:14px;">
                     <thead>
                         <tr><th>Aspek</th><th>Factory Constructor</th><th>Static Method</th></tr>
@@ -1112,38 +1200,49 @@ void main() {
                 <p>Buat <span class="code-inline">ConnectionFactory</span> dengan pooling koneksi database.</p>
                 <div class="jawaban">
                     <strong>✅ Jawaban:</strong>
-                    <pre>class ConnectionFactory {
-    final String host;
-    final int port;
-    final int maxPoolSize;
+                    <pre>// M BAGAS KHOIRULLAH (251410016) SI2A 
+class ConnectionFactory {
+  final String host;
+  final int port;
+  final int maxPoolSize;
 
-    static final Map&lt;String, ConnectionFactory&gt; _pool = {};
+  static final Map<String, ConnectionFactory> _pool = {};
 
-    ConnectionFactory._(this.host, this.port, this.maxPoolSize);
+  // Private constructor
+  ConnectionFactory._(this.host, this.port, this.maxPoolSize);
 
-    factory ConnectionFactory(String host, int port, {int maxPoolSize = 10}) {
-        var key = '$host:$port';
-        if (!_pool.containsKey(key)) {
-            _pool[key] = ConnectionFactory._(host, port, maxPoolSize);
-        }
-        return _pool[key]!;
+  // Factory constructor dengan caching
+  factory ConnectionFactory(
+    String host,
+    int port, {
+    int maxPoolSize = 10,
+  }) {
+    var key = '$host:$port';
+
+    if (!_pool.containsKey(key)) {
+      _pool[key] = ConnectionFactory._(host, port, maxPoolSize);
     }
 
-    void connect() {
-        print('Connecting to $host:$port (pool size: $maxPoolSize)');
-    }
+    return _pool[key]!;
+  }
+
+  void connect() {
+    print('Connecting to $host:$port (pool size: $maxPoolSize)');
+  }
 }
 
 void main() {
-    var conn1 = ConnectionFactory('localhost', 5432);
-    var conn2 = ConnectionFactory('localhost', 5432);
-    var conn3 = ConnectionFactory('db.example.com', 3306);
+  var conn1 = ConnectionFactory('localhost', 5432);
+  var conn2 = ConnectionFactory('localhost', 5432);
+  var conn3 = ConnectionFactory('db.example.com', 3306);
 
-    print(identical(conn1, conn2)); // true
-    print(identical(conn1, conn3)); // false
-    conn1.connect();
+  print(identical(conn1, conn2)); // true
+  print(identical(conn1, conn3)); // false
+
+  conn1.connect();
+  conn3.connect();
 }</pre>
-<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/270dc6d99534a7d8f4b0c89b5136a7c5')">▶ Buka di DartPad</button>
                 </div>
             </div>
 
@@ -1202,7 +1301,7 @@ void main() {
     smsNotif.send('Your OTP is 1234');
     pushNotif.send('You have a new message');
 }</pre>
-<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/5a66330f1c86a499226ca881ebee092a')">▶ Buka di DartPad</button>xx
                 </div>
             </div>
 
@@ -1212,61 +1311,72 @@ void main() {
                 <p>Buat <span class="code-inline">ShapeFactory</span> dengan cache untuk shapes yang sama.</p>
                 <div class="jawaban">
                     <strong>✅ Jawaban:</strong>
-                    <pre>abstract class Shape {
-    void draw();
-    String get type;
+                    <pre>// M BAGAS KHOIRULLAH (251410016) SI2A 
+abstract class Shape {
+  void draw();
+  String get type;
 }
 
 class Circle implements Shape {
-    final double radius;
-    Circle(this.radius);
-    @override
-    void draw() => print('Drawing Circle with radius $radius');
-    @override
-    String get type => 'Circle($radius)';
+  final double radius;
+
+  Circle(this.radius);
+
+  @override
+  void draw() => print('Drawing Circle with radius $radius');
+
+  @override
+  String get type => 'Circle($radius)';
 }
 
 class Square implements Shape {
-    final double side;
-    Square(this.side);
-    @override
-    void draw() => print('Drawing Square with side $side');
-    @override
-    String get type => 'Square($side)';
+  final double side;
+
+  Square(this.side);
+
+  @override
+  void draw() => print('Drawing Square with side $side');
+
+  @override
+  String get type => 'Square($side)';
 }
 
 class ShapeFactory {
-    static final Map&lt;String, Shape&gt; _cache = {};
+  static final Map<String, Shape> _cache = {};
 
-    static Shape createCircle(double radius) {
-        var key = 'Circle-$radius';
-        if (!_cache.containsKey(key)) {
-            _cache[key] = Circle(radius);
-        }
-        return _cache[key]!;
+  static Shape createCircle(double radius) {
+    var key = 'Circle-$radius';
+
+    if (!_cache.containsKey(key)) {
+      _cache[key] = Circle(radius);
     }
 
-    static Shape createSquare(double side) {
-        var key = 'Square-$side';
-        if (!_cache.containsKey(key)) {
-            _cache[key] = Square(side);
-        }
-        return _cache[key]!;
+    return _cache[key]!;
+  }
+
+  static Shape createSquare(double side) {
+    var key = 'Square-$side';
+
+    if (!_cache.containsKey(key)) {
+      _cache[key] = Square(side);
     }
+
+    return _cache[key]!;
+  }
 }
 
 void main() {
-    var c1 = ShapeFactory.createCircle(5.0);
-    var c2 = ShapeFactory.createCircle(5.0);
-    var c3 = ShapeFactory.createCircle(7.0);
+  var c1 = ShapeFactory.createCircle(5.0);
+  var c2 = ShapeFactory.createCircle(5.0);
+  var c3 = ShapeFactory.createCircle(7.0);
 
-    print(identical(c1, c2)); // true
-    print(identical(c1, c3)); // false
+  print(identical(c1, c2)); // true
+  print(identical(c1, c3)); // false
 
-    c1.draw();
-    c3.draw();
+  c1.draw();
+  c3.draw();
 }</pre>
-<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/1aec9098c41f4753b8960cba749267d9')">▶ Buka di DartPad</button>xx
                 </div>
             </div>
 
@@ -1282,113 +1392,119 @@ void main() {
                 </ul>
                 <div class="jawaban">
                     <strong>✅ Jawaban Challenge:</strong>
-                    <pre>abstract class Animal {
-    String get name;
-    String speak();
+                    <pre>// M BAGAS KHOIRULLAH (251410016) SI2A 
+abstract class Animal {
+  String get name;
+  String speak();
 }
 
 class Dog implements Animal {
-    final String _name;
-    Dog(this._name) {
-        if (_name.isEmpty) throw ArgumentError('Name cannot be empty');
-    }
-    @override
-    String get name => _name;
-    @override
-    String speak() => 'Woof!';
+  final String _name;
+
+  Dog(this._name) {
+    if (_name.isEmpty) throw ArgumentError('Name cannot be empty');
+  }
+
+  @override
+  String get name => _name;
+
+  @override
+  String speak() => 'Woof!';
 }
 
 class Cat implements Animal {
-    final String _name;
-    Cat(this._name) {
-        if (_name.isEmpty) throw ArgumentError('Name cannot be empty');
-    }
-    @override
-    String get name => _name;
-    @override
-    String speak() => 'Meow!';
+  final String _name;
+
+  Cat(this._name) {
+    if (_name.isEmpty) throw ArgumentError('Name cannot be empty');
+  }
+
+  @override
+  String get name => _name;
+
+  @override
+  String speak() => 'Meow!';
 }
 
 class Cow implements Animal {
-    final String _name;
-    Cow(this._name) {
-        if (_name.isEmpty) throw ArgumentError('Name cannot be empty');
-    }
-    @override
-    String get name => _name;
-    @override
-    String speak() => 'Moo!';
+  final String _name;
+
+  Cow(this._name) {
+    if (_name.isEmpty) throw ArgumentError('Name cannot be empty');
+  }
+
+  @override
+  String get name => _name;
+
+  @override
+  String speak() => 'Moo!';
 }
 
 class AnimalFactory {
-    static final Map&lt;String, Animal&gt; _cache = {};
+  static final Map<String, Animal> _cache = {};
 
-    static Animal create(String type, String name) {
-        if (name.isEmpty) {
-            throw ArgumentError('Animal name cannot be empty');
-        }
-
-        var key = '$type:$name';
-
-        if (_cache.containsKey(key)) {
-            return _cache[key]!;
-        }
-
-        Animal animal;
-        switch (type.toLowerCase()) {
-            case 'dog':
-                animal = Dog(name);
-                break;
-            case 'cat':
-                animal = Cat(name);
-                break;
-            case 'cow':
-                animal = Cow(name);
-                break;
-            default:
-                throw ArgumentError('Unknown animal type: $type');
-        }
-
-        _cache[key] = animal;
-        return animal;
+  static Animal create(String type, String name) {
+    if (name.isEmpty) {
+      throw ArgumentError('Animal name cannot be empty');
     }
+
+    var key = '$type:$name';
+
+    if (_cache.containsKey(key)) {
+      return _cache[key]!;
+    }
+
+    Animal animal;
+
+    switch (type.toLowerCase()) {
+      case 'dog':
+        animal = Dog(name);
+        break;
+      case 'cat':
+        animal = Cat(name);
+        break;
+      case 'cow':
+        animal = Cow(name);
+        break;
+      default:
+        throw ArgumentError('Unknown animal type: $type');
+    }
+
+    _cache[key] = animal;
+    return animal;
+  }
 }
 
 void main() {
-    // Test cache
-    var dog1 = AnimalFactory.create('dog', 'Buddy');
-    var dog2 = AnimalFactory.create('dog', 'Buddy');
-    var dog3 = AnimalFactory.create('dog', 'Rex');
+  var dog1 = AnimalFactory.create('dog', 'Buddy');
+  var dog2 = AnimalFactory.create('dog', 'Buddy');
+  var dog3 = AnimalFactory.create('dog', 'Rex');
 
-    print(identical(dog1, dog2)); // true
-    print(identical(dog1, dog3)); // false
+  print(identical(dog1, dog2)); // true
+  print(identical(dog1, dog3)); // false
 
-    print('${dog1.name} says ${dog1.speak()}');
-    print('${dog3.name} says ${dog3.speak()}');
+  print('${dog1.name} says ${dog1.speak()}');
+  print('${dog3.name} says ${dog3.speak()}');
 
-    // Test cat
-    var cat = AnimalFactory.create('cat', 'Whiskers');
-    print('${cat.name} says ${cat.speak()}');
+  var cat = AnimalFactory.create('cat', 'Whiskers');
+  print('${cat.name} says ${cat.speak()}');
 
-    // Test cow
-    var cow = AnimalFactory.create('cow', 'Bessie');
-    print('${cow.name} says ${cow.speak()}');
+  var cow = AnimalFactory.create('cow', 'Bessie');
+  print('${cow.name} says ${cow.speak()}');
 
-    // Test validation
-    try {
-        AnimalFactory.create('dog', '');
-    } catch (e) {
-        print('Validation works: $e');
-    }
+  try {
+    AnimalFactory.create('dog', '');
+  } catch (e) {
+    print('Validation works: $e');
+  }
 
-    // Test unknown type
-    try {
-        AnimalFactory.create('bird', 'Tweety');
-    } catch (e) {
-        print('Unknown type handled: $e');
-    }
+  try {
+    AnimalFactory.create('bird', 'Tweety');
+  } catch (e) {
+    print('Unknown type handled: $e');
+  }
 }</pre>
-<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/54ef71de5b6fda0ca6bc3cb73ab8bf10')">▶ Buka di DartPad</button>xx
                 </div>
             </div>
 
