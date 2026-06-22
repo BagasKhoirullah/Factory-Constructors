@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -382,7 +383,8 @@
         <a href="#caching">Kasus 2 – Factory dengan Caching</a>
         <a href="#subclass">Kasus 3 – Mengembalikan Subclass</a>
         <a href="#praktik1">Praktik 1 – Factory untuk Configuration</a>
-        <a href="#named-generic">Factory dengan Named &amp; Generic</a>
+        <a href="#named-constructor">Factory dengan Named Constructors</a>
+        <a href="#generic-factory">Factory dengan Generic</a>
         <a href="#praktik2-payment">Praktik 2 – Factory untuk Payment</a>
         <a href="#immutable-cache">Factory untuk Immutable Objects</a>
         <a href="#document-factory">Studi Kasus – Document Factory</a>
@@ -415,12 +417,7 @@
                 <pre>extension IntExt on int {
     bool get isEven => this % 2 == 0;
 }
-
-void main() {
-    print(4.isEven); // true
-    print(5.isEven); // false
-}</pre>
-                <button class="dartpad-btn" onclick="openDartpadFromPre(this)">▶ Buka di DartPad</button>
+</pre>
             </div>
         </section>
 
@@ -466,7 +463,7 @@ void main() {
     var obj1 = MyClass();      // Generative
     var obj2 = MyClass.create(); // Factory
 }</pre>
-                <button class="dartpad-btn" onclick="openDartpadFromPre(this)">▶ Buka di DartPad</button>
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
                 <p style="margin-top:8px; color:#94a3b8;">📌 Factory constructor <strong>harus</strong> mengembalikan instance dari tipe yang sama atau subclass-nya.</p>
             </div>
         </section>
@@ -503,7 +500,7 @@ void main() {
     db1.connect();
     db2.connect();
 }</pre>
-                <button class="dartpad-btn" onclick="openDartpadFromPre(this)">▶ Buka di DartPad</button>
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
                 <div class="note">
                     ✅ Dengan factory constructor, kita memastikan hanya <strong>satu instance</strong> yang dibuat dan digunakan di seluruh aplikasi.
                 </div>
@@ -561,7 +558,7 @@ void main() {
     print('\n-- Are conn1 and conn2 the same instance? ${identical(conn1, conn2)}');
     print('-- Are conn1 and conn3 the same instance? ${identical(conn1, conn3)}');
 }</pre>
-                <button class="dartpad-btn" onclick="openDartpadFromPre(this)">▶ Buka di DartPad</button>
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
                 <div class="note">
                     🗂️ Factory constructor memeriksa cache terlebih dahulu. Jika sudah ada, kembalikan instance yang sama — <strong>efisien</strong> untuk resource-heavy objects.
                 </div>
@@ -626,7 +623,7 @@ void main() {
 
     // var unknown = Shape('pentagon'); // throws ArgumentError
 }</pre>
-                <button class="dartpad-btn" onclick="openDartpadFromPre(this)">▶ Buka di DartPad</button>
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
                 <div class="note">
                     🔀 Factory constructor bertindak sebagai <strong>factory method</strong> yang memilih subclass yang tepat berdasarkan input, menjaga kode klien tetap sederhana.
                 </div>
@@ -687,18 +684,18 @@ void main() {
     print(config2);
     print(config3);
 }</pre>
-                <button class="dartpad-btn" onclick="openDartpadFromPre(this)">▶ Buka di DartPad</button>
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
                 <div class="note">
                     💡 Factory constructor memungkinkan pembuatan objek dari <strong>berbagai sumber</strong> dengan cara yang konsisten dan terstruktur.
                 </div>
             </div>
         </section>
 
-        <!-- ===== SLIDE 10: FACTORY dengan NAMED & GENERIC ===== -->
-        <section id="named-generic">
-            <h2>📦 Factory dengan Named Constructors &amp; Generic (Response)</h2>
+        <!-- ===== SLIDE 9: FACTORY dengan NAMED CONSTRUCTORS ===== -->
+        <section id="named-constructor">
+            <h2>🏷️ Factory dengan Named Constructors</h2>
             <div class="card">
-                <p>Menggunakan factory constructor dengan <strong>named constructors</strong> dan <strong>generik</strong> untuk membuat <span class="code-inline">Response&lt;T&gt;</span> yang sukses atau error.</p>
+                <p>Factory constructor bisa memiliki <strong>nama</strong> (seperti generative constructor). Ini memudahkan pembuatan objek dengan tujuan yang berbeda secara semantik, misalnya <span class="code-inline">Response.success()</span> dan <span class="code-inline">Response.error()</span>.</p>
                 <pre>abstract class Response&lt;T&gt; {
     final T? data;
     final String? error;
@@ -721,15 +718,57 @@ class ErrorResponse&lt;T&gt; extends Response&lt;T&gt; {
 }
 
 void main() {
+    // Penggunaan named factory
     var success = Response&lt;String&gt;.success('Data berhasil dimuat');
     var error = Response&lt;int&gt;.error('Gagal memuat data');
 
     print('Success: data=${success.data}, error=${success.error}');
     print('Error: data=${error.data}, error=${error.error}');
 }</pre>
-                <button class="dartpad-btn" onclick="openDartpadFromPre(this)">▶ Buka di DartPad</button>
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
                 <div class="note">
-                    📌 <strong>Named constructors</strong> memudahkan pembuatan objek dengan tujuan spesifik (success/error). <strong>Generic</strong> memungkinkan tipe data fleksibel.
+                    📌 <strong>Named constructors</strong> pada factory membuat kode lebih ekspresif dan mudah dibaca, mirip dengan <span class="code-inline">DateTime.now()</span> atau <span class="code-inline">Uri.parse()</span>.
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SLIDE 10: FACTORY dengan GENERIC ===== -->
+        <section id="generic-factory">
+            <h2>🧬 Factory dengan Generic</h2>
+            <div class="card">
+                <p>Factory constructor dapat digunakan pada <strong>tipe generik</strong> (<span class="code-inline">&lt;T&gt;</span>) untuk memastikan <em>type safety</em>. Dengan redirecting factory, kita dapat mengembalikan subclass yang sesuai dengan tipe data.</p>
+                <pre>abstract class Response&lt;T&gt; {
+    final T? data;
+    final String? error;
+
+    Response({this.data, this.error});
+
+    // Redirecting factory ke subclass dengan generic T
+    factory Response.success(T data) = SuccessResponse&lt;T&gt;;
+    factory Response.error(String error) = ErrorResponse&lt;T&gt;;
+}
+
+class SuccessResponse&lt;T&gt; extends Response&lt;T&gt; {
+    SuccessResponse(T data) : super(data: data);
+}
+
+class ErrorResponse&lt;T&gt; extends Response&lt;T&gt; {
+    ErrorResponse(String error) : super(error: error);
+}
+
+void main() {
+    // Tipe data ditentukan saat pemanggilan
+    var intResponse = Response&lt;int&gt;.success(100);
+    var stringResponse = Response&lt;String&gt;.success('Hello');
+    var errorResponse = Response&lt;bool&gt;.error('Failed');
+
+    print('intResponse data: ${intResponse.data} (type: ${intResponse.data.runtimeType})');
+    print('stringResponse data: ${stringResponse.data} (type: ${stringResponse.data.runtimeType})');
+    print('errorResponse error: ${errorResponse.error}');
+}</pre>
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+                <div class="note">
+                    🧩 <strong>Generic</strong> pada factory memungkinkan pembuatan objek yang <em>type-safe</em> tanpa kehilangan fleksibilitas, sekaligus mendukung <strong>redirecting</strong> ke subclass.
                 </div>
             </div>
         </section>
@@ -818,8 +857,8 @@ void main() {
 
     print(identical(cc1, cc2)); // true
 }</pre>
-                <button class="dartpad-btn" onclick="openDartpadFromPre(this)">▶ Buka di DartPad</button>
-                <div class="note">
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
+            <div class="note">
                     💳 Factory menangani <strong>validasi</strong>, <strong>cache</strong>, dan <strong>pemilihan subclass</strong> — semua dalam satu titik pembuatan objek.
                 </div>
             </div>
@@ -874,7 +913,7 @@ void main() {
     print(red1);
     print(red2);
 }</pre>
-                <button class="dartpad-btn" onclick="openDartpadFromPre(this)">▶ Buka di DartPad</button>
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
                 <div class="note">
                     🎯 Dengan cache, warna yang sama tidak dibuat berulang kali — menghemat memori untuk objek yang <strong>immutable</strong> dan sering digunakan.
                 </div>
@@ -974,7 +1013,7 @@ void main() {
     //   print(e); // Unsupported file type
     // }
 }</pre>
-                <button class="dartpad-btn" onclick="openDartpadFromPre(this)">▶ Buka di DartPad</button>
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
                 <div class="note">
                     📄 Factory ini menangani <strong>validasi ekstensi</strong>, <strong>cache</strong>, dan <strong>pembuatan subclass</strong> yang sesuai — sangat berguna dalam aplikasi pengolah dokumen.
                 </div>
@@ -1005,8 +1044,7 @@ void main() {
     print('e2: $e2');
     print('Apakah e1 dan e2 berbeda? ${e1 != e2}');
 }</pre>
-                <button class="dartpad-btn" onclick="openDartpadFromPre(this)">▶ Buka di DartPad</button>
-
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
                 <table style="margin-top:14px;">
                     <thead>
                         <tr><th>Aspek</th><th>Factory Constructor</th><th>Static Method</th></tr>
@@ -1105,7 +1143,7 @@ void main() {
     print(identical(conn1, conn3)); // false
     conn1.connect();
 }</pre>
-                    <button class="dartpad-btn" onclick="openDartpadFromPre(this)">▶ Buka di DartPad</button>
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
                 </div>
             </div>
 
@@ -1164,7 +1202,7 @@ void main() {
     smsNotif.send('Your OTP is 1234');
     pushNotif.send('You have a new message');
 }</pre>
-                    <button class="dartpad-btn" onclick="openDartpadFromPre(this)">▶ Buka di DartPad</button>
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
                 </div>
             </div>
 
@@ -1228,7 +1266,7 @@ void main() {
     c1.draw();
     c3.draw();
 }</pre>
-                    <button class="dartpad-btn" onclick="openDartpadFromPre(this)">▶ Buka di DartPad</button>
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
                 </div>
             </div>
 
@@ -1350,7 +1388,7 @@ void main() {
         print('Unknown type handled: $e');
     }
 }</pre>
-                    <button class="dartpad-btn" onclick="openDartpadFromPre(this)">▶ Buka di DartPad</button>
+<button class="dartpad-btn" onclick="openDartpad('https://dartpad.dev/92b6cd7e99eff6d7e4f4a6a9232e68ce')">▶ Buka di DartPad</button>xx
                 </div>
             </div>
 
